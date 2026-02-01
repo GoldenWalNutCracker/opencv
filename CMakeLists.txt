@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # 设置OpenCV路径
-set(OpenCV_DIR "C:/opencv/build" CACHE PATH "OpenCV installation path")
+set(OpenCV_DIR "C:/opencv/build/x64/vc16/lib" CACHE PATH "OpenCV installation path")
 find_package(OpenCV REQUIRED 
     COMPONENTS core imgproc highgui videoio calib3d
 )
@@ -43,4 +43,5 @@ if(MSVC)
     target_compile_options(auto_aim PRIVATE /W3)
 else()
     target_compile_options(auto_aim PRIVATE -Wall -Wextra)
+
 endif()
