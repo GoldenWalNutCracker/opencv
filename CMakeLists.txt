@@ -1,36 +1,46 @@
-# CMakeList.txt: 顶层 CMake 项目文件，在此处执行全局配置
-# 并包含子项目。
-#
+﻿cmake_minimum_required(VERSION 3.10)
+project(AutoAim)
 
-#配置OpenCV环境
-cmake_minimum_required(VERSION 3.8)
-project(ArmorPlateRecognition1)
+# 设置C++标准
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
+# 设置OpenCV路径
+set(OpenCV_DIR "C:/opencv/build" CACHE PATH "OpenCV installation path")
+find_package(OpenCV REQUIRED 
+    COMPONENTS core imgproc highgui videoio calib3d
+)
 
-set(OpenCV_DIR "C:/opencv/build" CACHE PATH "Path to OpenCV")
+# 打印OpenCV信息
+message(STATUS "OpenCV version: ${OpenCV_VERSION}")
+message(STATUS "OpenCV include dirs: ${OpenCV_INCLUDE_DIRS}")
 
+# 添加可执行文件
+add_executable(auto_aim
+    src/main.cpp
+    src/ArmorDetector.cpp
+    src/LightBarDetector.cpp
+    src/NumberRecognizer.cpp
+    src/VideoProcessor.cpp
+)
 
-find_package(OpenCV REQUIRED)
+# 包含头文件目录
+target_include_directories(auto_aim PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${OpenCV_INCLUDE_DIRS}
+)
 
-include_directories(
-	include
-	ArmorDetector
-	LightBarDetector	
-	${OpenCV_INCLUDE_DIRS})
+# 链接OpenCV库
+target_link_libraries(auto_aim PRIVATE ${OpenCV_LIBS})
 
-add_executable (${PROJECT_NAME}  main.cpp
-				 ArmorPlateRecognition1.cpp  LightBarDetector.cpp)
-
-target_link_libraries(ArmorPlateRecognition1 ${OpenCV_LIBS})
-# 如果支持，请为 MSVC 编译器启用热重载。
-if (POLICY CMP0141)
-  cmake_policy(SET CMP0141 NEW)
-  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
+# 设置输出目录
+set_target_properties(auto_aim PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+)
+# 编译选项
+if(MSVC)
+    target_compile_options(auto_aim PRIVATE /W3)
+else()
+    target_compile_options(auto_aim PRIVATE -Wall -Wextra)
 endif()
-
-project ("ArmorPlateRecognition1")
-
-# 包含子项目。
-#add_subdirectory ()
-
-
