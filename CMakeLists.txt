@@ -1,19 +1,25 @@
-﻿# CMakeList.txt: 顶层 CMake 项目文件，在此处执行全局配置
+# CMakeList.txt: 顶层 CMake 项目文件，在此处执行全局配置
 # 并包含子项目。
 #
 
 #配置OpenCV环境
-cmake_minimum_required (VERSION 3.8)
-
-project (ArmorPlateRecognition1)
-set(OpenCV_DIR "C: / Users / 24388 / Downloads / opencv/build" CACHE PATH "Path to OpenCV")
+cmake_minimum_required(VERSION 3.8)
+project(ArmorPlateRecognition1)
 
 
-include_directories("C: / Users / 24388 / Downloads / opencv "${OpenCV_INCLUDE_DIRS}./include)
+set(OpenCV_DIR "C:/opencv/build" CACHE PATH "Path to OpenCV")
 
-add_executable (ArmorPlateRecognition1
-				 "ArmorPlateRecognition1.cpp" "ArmorPlateRecognition1.h")
-				add_executable(main "main.cpp")
+
+find_package(OpenCV REQUIRED)
+
+include_directories(
+	include
+	ArmorDetector
+	LightBarDetector	
+	${OpenCV_INCLUDE_DIRS})
+
+add_executable (${PROJECT_NAME}  main.cpp
+				 ArmorPlateRecognition1.cpp  LightBarDetector.cpp)
 
 target_link_libraries(ArmorPlateRecognition1 ${OpenCV_LIBS})
 # 如果支持，请为 MSVC 编译器启用热重载。
@@ -26,4 +32,5 @@ project ("ArmorPlateRecognition1")
 
 # 包含子项目。
 #add_subdirectory ()
+
 
